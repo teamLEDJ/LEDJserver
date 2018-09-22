@@ -1,0 +1,36 @@
+@charset "utf-8";
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn {
+    margin: 5px 5px;
+    display: block;
+    width: 200px;
+    height: 70px;
+    line-height: 70px;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    background-color: #25760d;
+    /*ボタン色*/
+    border-radius: 5px;
+    /*角丸*/
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.panel-heading {
+    width: 100%;
+    background: black;
+    padding: 15px;
+    color: white;
+    text-align: center;
+}
