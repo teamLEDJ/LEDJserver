@@ -33,11 +33,20 @@ def brightness():
     return render_template('main.html', **templateData);
 
 # /durationアクセス
+"""
 @app.route("/duration/", methods=['POST'])
 def duration():
     duration = request.form['duration']
     print ("Duration:", duration)
     arduino_send_cmd("D="+str(duration))
+    templateData = {}
+    return render_template('main.html', **templateData);
+"""
+@app.route("/duration/", methods=['POST'])
+def duration():
+    btn_name = get_btn_name(request)
+    print ("Duration:", btn_name )
+    arduino_send_cmd("D="+str(btn_name))
     templateData = {}
     return render_template('main.html', **templateData);
 
