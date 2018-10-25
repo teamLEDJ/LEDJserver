@@ -48,7 +48,7 @@ def duration():
     print ("Duration:", btn_name )
     arduino_send_cmd("D="+str(btn_name))
     templateData = {}
-    return render_template('main.html', **templateData);
+    #return render_template('main.html', **templateData);
 
 # /colorアクセス
 @app.route("/color/", methods=['POST'])
