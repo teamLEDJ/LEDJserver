@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, json
 
-import serial
-import serial.tools.list_ports
+#import serial
+#import serial.tools.list_ports
 import sys
 import time
 import socket
@@ -32,7 +32,7 @@ def brightness():
     app.logger.debug("aaa")
     btn_name = get_btn_name(request)
     print("Brightness:", btn_name)
-    arduino_send_cmd("B="+str(btn_name))
+    # arduino_send_cmd("B="+str(btn_name))
 
     return ""
 
@@ -44,7 +44,7 @@ def brightness():
 def duration():
     btn_name = get_btn_name(request)
     print("Duration:", btn_name)
-    arduino_send_cmd("D="+str(btn_name))
+    # arduino_send_cmd("D="+str(btn_name))
 
     return ""
 
@@ -55,7 +55,7 @@ def duration():
 def color():
     btn_name = get_btn_name(request)
     print("Color:", btn_name)
-    arduino_send_cmd("C="+str(btn_name))
+    # arduino_send_cmd("C="+str(btn_name))
 
     return ""
 
@@ -71,7 +71,7 @@ def palette():
 
     btn_name = get_btn_name(request)
     print("Palette:", btn_name)
-    arduino_send_cmd("P="+str(btn_name))
+    # arduino_send_cmd("P="+str(btn_name))
 
     return ""
 
@@ -82,7 +82,7 @@ def palette():
 def anim():
     btn_name = get_btn_name(request)
     print("Animation code:", btn_name)
-    arduino_send_cmd("A="+str(btn_name))
+    # arduino_send_cmd("A="+str(btn_name))
 
     return ""
 
@@ -133,6 +133,7 @@ def arduino_get_resp(s):
         print(s.readline().decode(), end="")
 
 
+"""
 def arduino_send_cmd(s):
     arduino.flush()
     s = s+'\n'
@@ -140,10 +141,10 @@ def arduino_send_cmd(s):
     arduino_get_resp(arduino)
     time.sleep(.1)
     arduino.flush()
-
+"""
 # try to detect the USB port where Arduino is connected
 
-
+"""
 def arduino_get_port():
     print("Listing ports")
     port = None
@@ -155,6 +156,7 @@ def arduino_get_port():
             print("Arduino detected on port", port)
 
     return port
+"""
 
 
 def get_ip():
@@ -173,12 +175,12 @@ def get_ip():
 if __name__ == "__main__":
 
     port = None
-
+    """
     # use the USB port name if passed
     if len(sys.argv) > 1:
         port = sys.argv[1]
         print("Arduino port: " + port)
-
+    
     # otherwise tries to detect the port
     # this seems to work only on Windows if Arduino USB driver is installed
     while(port == None):
@@ -190,8 +192,8 @@ if __name__ == "__main__":
     # open the serial interface
     arduino = serial.Serial(port, 9600, timeout=1)
     time.sleep(.5)
-
-    print("Port", arduino)
+    """
+    #print("Port", arduino)
     print("Current IP is", get_ip())
     print("Point your browser to http://", get_ip(), sep="")
     print()
