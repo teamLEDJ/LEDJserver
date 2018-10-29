@@ -5,7 +5,5 @@ $(".btn").on('click',function() {
         type: 'post',
         data: $(this).attr("name"),
         dataType: 'text'
-
-    });
-    
+    });   
 });
