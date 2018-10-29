@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, json
 
-import serial, serial.tools.list_ports
+import serial
+import serial.tools.list_ports
 import sys
 import time
 import socket
@@ -20,47 +21,47 @@ currPal = ""
 # indexアクセス
 @app.route("/")
 def home():
-    templateData = {}
-    return render_template('main.html', **templateData);
+
+    return render_template('main.html')
 
 # /brightnessアクセス
+
+
 @app.route("/brightness/", methods=['POST'])
 def brightness():
+    app.logger.debug("aaa")
     btn_name = get_btn_name(request)
-    print ("Brightness:", btn_name )
+    print("Brightness:", btn_name)
     arduino_send_cmd("B="+str(btn_name))
-    templateData = {}
-    return render_template('main.html', **templateData);
+
+    return ""
+
 
 # /durationアクセス
-"""
-@app.route("/duration/", methods=['POST'])
-def duration():
-    duration = request.form['duration']
-    print ("Duration:", duration)
-    arduino_send_cmd("D="+str(duration))
-    templateData = {}
-    return render_template('main.html', **templateData);
-"""
+
+
 @app.route("/duration/", methods=['POST'])
 def duration():
     btn_name = get_btn_name(request)
-    print ("Duration:", btn_name )
+    print("Duration:", btn_name)
     arduino_send_cmd("D="+str(btn_name))
-    templateData = {}
-    #return render_template('main.html', **templateData);
+
+    return ""
 
 # /colorアクセス
+
+
 @app.route("/color/", methods=['POST'])
 def color():
     btn_name = get_btn_name(request)
-    print ("Color:", btn_name )
+    print("Color:", btn_name)
     arduino_send_cmd("C="+str(btn_name))
-    
-    templateData = {}
-    return render_template('main.html', **templateData);
+
+    return ""
 
 # /paletteアクセス
+
+
 @app.route("/palette/", methods=['POST'])
 def palette():
     global currLevel
@@ -69,22 +70,24 @@ def palette():
     global currPal
 
     btn_name = get_btn_name(request)
-    print ("Palette:", btn_name)
+    print("Palette:", btn_name)
     arduino_send_cmd("P="+str(btn_name))
-    
-    templateData = {}
-    return render_template('main.html', **templateData);
+
+    return ""
 
 # /animアクセス
+
+
 @app.route("/anim/", methods=['POST'])
 def anim():
     btn_name = get_btn_name(request)
-    print ("Animation code:", btn_name)
+    print("Animation code:", btn_name)
     arduino_send_cmd("A="+str(btn_name))
-    templateData = {}
-    return render_template('main.html', **templateData);
+
+    return ""
 
 
+"""
 @app.route("/pal/", methods=['POST'])
 def pal():
     global currLevel
@@ -93,30 +96,31 @@ def pal():
     global currPal
 
     if 'btnRgb' in request.form:
-        arduino_send_cmd("a");
-        currPal = "RGB";
+        # arduino_send_cmd("a")
+        currPal = "RGB"
     elif 'btnRainbow' in request.form:
-        arduino_send_cmd("b");
-        currPal = "Rainbow";
+        # arduino_send_cmd("b")
+        currPal = "Rainbow"
     elif 'btnParty' in request.form:
-        arduino_send_cmd("d");
-        currPal = "Party";
+        # arduino_send_cmd("d")
+        currPal = "Party"
     elif 'btnFire' in request.form:
-        arduino_send_cmd("f");
-        currPal = "Fire";
-    
-    templateData = {
-      'currAnim': currAnim,
-      'currPal': currPal,
-      'currLevel': currLevel,
-      'currColor': currColor
-    };
+        # arduino_send_cmd("f")
+        currPal = "Fire"
 
-    return render_template('main.html', **templateData);
+    templateData = {
+        'currAnim': currAnim,
+        'currPal': currPal,
+        'currLevel': currLevel,
+        'currColor': currColor
+    }
+
+    return ""
+"""
 
 
 def get_btn_name(request):
-    btn_name=""
+    btn_name = ""
     for key in request.form.keys():
         #print ("Button pressed:", key)
         btn_name = key
@@ -124,19 +128,22 @@ def get_btn_name(request):
 
 
 def arduino_get_resp(s):
-    time.sleep(.1);
+    time.sleep(.1)
     while (s.in_waiting > 0):
-        print(s.readline().decode(), end="");
+        print(s.readline().decode(), end="")
+
 
 def arduino_send_cmd(s):
-    arduino.flush();
+    arduino.flush()
     s = s+'\n'
-    arduino.write(s.encode());
-    arduino_get_resp(arduino);
-    time.sleep(.1);
+    arduino.write(s.encode())
+    arduino_get_resp(arduino)
+    time.sleep(.1)
     arduino.flush()
 
 # try to detect the USB port where Arduino is connected
+
+
 def arduino_get_port():
     print("Listing ports")
     port = None
@@ -163,28 +170,27 @@ def get_ip():
     return ip
 
 
-
 if __name__ == "__main__":
 
     port = None
-    
+
     # use the USB port name if passed
-    if len(sys.argv)>1:
+    if len(sys.argv) > 1:
         port = sys.argv[1]
         print("Arduino port: " + port)
 
     # otherwise tries to detect the port
     # this seems to work only on Windows if Arduino USB driver is installed
-    while(port==None):
+    while(port == None):
         port = arduino_get_port()
-        if port==None:
+        if port == None:
             print("Arduino not found. Retrying...")
-            time.sleep(5);
-    
+            time.sleep(5)
+
     # open the serial interface
     arduino = serial.Serial(port, 9600, timeout=1)
-    time.sleep(.5);
-    
+    time.sleep(.5)
+
     print("Port", arduino)
     print("Current IP is", get_ip())
     print("Point your browser to http://", get_ip(), sep="")
@@ -193,5 +199,5 @@ if __name__ == "__main__":
     #app.run(host='0.0.0.0', port=80, debug=True)
     # どこからでもアクセスできるよ
     # threaded=true にすると同時アクセスができる
+    app.debug = True
     app.run(host='0.0.0.0', port=8000, threaded=True)
-
